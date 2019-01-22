@@ -3,7 +3,7 @@
 """
 Created on Mon Jan 21 18:21:01 2019
 
-@author: root
+@author: tony m
 """
 import torch
 from torch.autograd import Variable
@@ -14,53 +14,36 @@ from utils.display_utils import image_gray
 save_best and save_last are paths
 '''
 def train_loop(train_loader, val_loader, test_image, model, optimizer, scheduler, 
-               criterion,save_best, save_last):
+               criterion,save_best, save_last, epochs):    
     
-    
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    
-    
-    # print(get_it.shape)
-    
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")    
+        
     mean_train_losses = []
-    mean_val_losses = []
-    
-    mean_train_acc = []
-    mean_val_acc = []
+    mean_val_losses = []    
+#    mean_train_acc = []
+#    mean_val_acc = []
+#    maxValacc = -99999
     minLoss = 99999
-    maxValacc = -99999
-    for epoch in range(1000):
+    
+    
+    for epoch in range(epochs):
         scheduler.step()
         print('EPOCH: ',epoch+1)
-    #     train_losses = []
-    #     val_losses = []    
-        train_acc = []
-        val_acc = []
+#        train_acc = []
+#        val_acc = []
         
         running_loss = 0.0
         
         model.train()
         count = 0
-        for images, labels in train_loader:    
-    #         labels = labels.squeeze()
+        for images, labels in train_loader:
+            
             images = Variable(images).to(device)
             labels = Variable(labels).to(device)
-        
-    #         print(images.shape)
+            
             outputs = model(images) 
-    #         print('first',outputs.shape)
-    #         print(outputs[0][0])
-    #         print('second',outputs.shape)
-    #         print(outputs[0][1])
-            
-    #         print(labels.squeeze())
-            
-    #         print(images.shape, labels.shape)
             optimizer.zero_grad()
-            loss = criterion(outputs, labels)
-            
-    #         train_acc.append(accuracy(outputs, labels))
-            
+            loss = criterion(outputs, labels)            
             loss.backward()
             optimizer.step()        
             
@@ -75,14 +58,12 @@ def train_loop(train_loader, val_loader, test_image, model, optimizer, scheduler
         count = 0
         val_running_loss = 0.0
         for images, labels in val_loader:
-    #         labels = labels.squeeze()
             images = Variable(images).to(device)
             labels = Variable(labels).to(device)        
             
             outputs = model(images)
             loss = criterion(outputs, labels)
-    
-    #         val_acc.append(accuracy(outputs, labels))
+            
             val_running_loss += loss.item()
             count +=1
     
@@ -119,7 +100,6 @@ def train_loop(train_loader, val_loader, test_image, model, optimizer, scheduler
             images = Variable(test_image.cuda())
             outputs = model(images)
             image_gray(F.sigmoid(outputs)[0].squeeze()[:,:,0].data.cpu().numpy(),3)
-    #         image(outputs[0][1][:,:,0].data.cpu().numpy(),3)
             image_gray(test_image[0].squeeze()[:,:,0],3)
         
         print('')
