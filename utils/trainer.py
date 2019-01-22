@@ -13,8 +13,8 @@ from utils.display_utils import image_gray
 '''
 save_best and save_last are paths
 '''
-def train_loop(train_loader, val_loader, test_image, model, optimizer, scheduler, 
-               criterion,save_best, save_last, epochs):    
+def train_loop(train_loader, val_loader, model, optimizer, scheduler, 
+               criterion,save_best, save_last, epochs, test_image=None, ):    
     
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")    
         
@@ -95,8 +95,8 @@ def train_loop(train_loader, val_loader, test_image, model, optimizer, scheduler
             torch.save(model.state_dict(), save_last )
             print(f'Last: {mean_val_loss}')
             
-        if epoch%20==0:
-            print('inside')
+        if epoch%20==0 and test_image is not None:
+            
             images = Variable(test_image.cuda())
             outputs = model(images)
             image_gray(F.sigmoid(outputs)[0].squeeze()[:,:,0].data.cpu().numpy(),3)
