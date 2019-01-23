@@ -27,6 +27,8 @@ def make_test_set(img):
                 X_test[count] = img[i-30:i+34, j-30:j+34,k:k+6]
                 count+=1
     print('dataset size: ', count)
+    
+    X_test /=255
     return X_test
     
     #print(count)
