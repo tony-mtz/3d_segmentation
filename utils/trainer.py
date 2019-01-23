@@ -24,6 +24,7 @@ def train_loop(train_loader, val_loader, model, optimizer, scheduler,
 #    mean_val_acc = []
 #    maxValacc = -99999
     minLoss = 99999
+    last_epoch = epochs-1
     
     
     for epoch in range(epochs):
@@ -91,7 +92,7 @@ def train_loop(train_loader, val_loader, model, optimizer, scheduler,
     #         torch.save(model.state_dict(), 'res/cam_40/best_acc_norm_10x10.pth' )
     #         print(f'NEW BEST Acc: {val_acc_} ........old best:{maxValacc}')
     #         maxValacc = val_acc_
-        if epoch==1999:
+        if epoch==last_epoch:
             torch.save(model.state_dict(), save_last )
             print(f'Last: {mean_val_loss}')
             
