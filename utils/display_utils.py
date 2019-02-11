@@ -35,11 +35,12 @@ def image_grid(img, preprocess=True, grid_x=9, grid_y=8,fig_size=(18,18)):
     
     
 #8x8
-def rebuild(img):
-    res_ = np.zeros((1024,1024,24))
+def rebuild(img, layers):
+    res_ = np.zeros((1024,1024,layers))
     count =0
+    print(len(img))
     #z to 24 by 6
-    for k in range(0,24,6):
+    for k in range(0,layers,6):
         #j and i 128 for stride of 8
         for j in range(128):
     
