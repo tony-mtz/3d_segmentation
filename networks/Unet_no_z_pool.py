@@ -76,7 +76,7 @@ class Unet(nn.Module):
         cat0 = torch.cat([x1,xu0],1)
         xu0 = self.up0(cat0)
         out = self.last(xu0)
-#         print('output shape ',out.shape)
+        print('output shape ',out.shape)
         return (out)
 
 
